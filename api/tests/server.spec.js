@@ -36,6 +36,22 @@ const seedDB = async () => {
   }
 };
 
+const cookieMaker = async () => {
+  try {
+    const authTest = await request(server)
+      .post("/api/users/login")
+      .send(testUser);
+    return authTest.header["set-cookie"];
+  } catch (err) {
+    console.log(`Error on cookie making! ${err}`);
+  }
+};
+
+const contextClassRef2 = ContextHelper;
+contextClassRef2.session2 = cookieMaker();
+console.log("Cookie maker returned ",contextClassRef2.session2);
+
+
 describe("Register with POST /api/users/register", () => {
   const expected = testRegisterResponse;
   beforeAll(() => seedDB());
@@ -71,24 +87,21 @@ describe.each`
   ${"habits"}         | ${expectedHabits}
   ${"tracked_habits"} | ${expectedTrackedHabits}
 `("GET /api/users/1/$route", ({ route, expected }) => {
-  const contextClassRef = ContextHelper;
-  beforeAll(async () => {
-    try {
-      await db.seed.run();
-      const authTest = await request(server)
-        .post("/api/users/login")
-        .send(testUser);
-      contextClassRef.session = authTest.header["set-cookie"];
-    } catch (err) {
-      console.log(`Error on test login! ${err}`);
-    }
+  //const contextClassRef = ContextHelper;
+  beforeAll( async () => {
+    await seedDB();
+    /*const authTest = await request(server)
+      .post("/api/users/login")
+      .send(testUser);
+    return authTest.header["set-cookie"];*/
+    //contextClassRef2.session2 = await cookieMaker();
   });
   it(`when logged-in, should return ${expected}`, async () => {
-    console.log(`**** ${contextClassRef.session} ****`);
+    console.log(`**** ${contextClassRef2.session2} ****`);
 
     const response = await request(server)
       .get(`/api/users/1/${route}`)
-      .set("Cookie", contextClassRef.session);
+      .set("Cookie", await contextClassRef2.session2);
     //console.log(response);
     expect(response.status).toEqual(200);
     expect(response.body).toEqual(expected);
