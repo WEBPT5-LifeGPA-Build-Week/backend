@@ -90,11 +90,6 @@ describe.each`
   //const contextClassRef = ContextHelper;
   beforeAll( async () => {
     await seedDB();
-    /*const authTest = await request(server)
-      .post("/api/users/login")
-      .send(testUser);
-    return authTest.header["set-cookie"];*/
-    //contextClassRef2.session2 = await cookieMaker();
   });
   it(`when logged-in, should return ${expected}`, async () => {
     console.log(`**** ${contextClassRef2.session2} ****`);
@@ -149,17 +144,9 @@ describe.each`
 `(
   "GET /api/$route, GET /api/$route/1 and DELETE /api/$route/1",
   ({ route, indexExpected, firstExpected }) => {
-    const contextClassRef = ContextHelper;
+    //const contextClassRef = ContextHelper;
     beforeAll(async () => {
-      try {
-        await db.seed.run();
-        const authTest = await request(server)
-          .post("/api/users/login")
-          .send(testUser);
-        contextClassRef.session = authTest.header["set-cookie"];
-      } catch (err) {
-        console.log(`Error on test login! ${err}`);
-      }
+      await seedDB();
     });
     describe("when logged-in", () => {
       it(`GET /api/${route} should return ${indexExpected}`, async () => {
@@ -167,7 +154,7 @@ describe.each`
 
         const response = await request(server)
           .get(`/api/${route}`)
-          .set("Cookie", contextClassRef.session);
+          .set("Cookie", await contextClassRef2.session2);
         //console.log(response);
         expect(response.status).toEqual(200);
         expect(response.body).toEqual(indexExpected);
@@ -178,7 +165,7 @@ describe.each`
 
         const response = await request(server)
           .get(`/api/${route}/1`)
-          .set("Cookie", contextClassRef.session);
+          .set("Cookie", await contextClassRef2.session2);
         //console.log(response);
         expect(response.status).toEqual(200);
         expect(response.body).toEqual(firstExpected);
@@ -189,7 +176,7 @@ describe.each`
 
         const response = await request(server)
           .delete(`/api/${route}/1`)
-          .set("Cookie", contextClassRef.session);
+          .set("Cookie", await contextClassRef2.session2);
         //console.log(response);
         expect(response.status).toEqual(200);
         expect(response.body).toEqual(firstExpected);
@@ -230,17 +217,9 @@ describe.each`
   ${"user_habits"}     | ${postUserHabit}     | ${expectedPostUserHabit}     | ${expectedPutUserHabit}
   ${"habit_tracking"}  | ${postHabitTracking} | ${expectedPostHabitTracking} | ${expectedPutHabitTracking}
 `("/api/$route", ({ route, dataToSend, postExpected, putExpected }) => {
-  const contextClassRef = ContextHelper;
+  //const contextClassRef = ContextHelper;
   beforeAll(async () => {
-    try {
-      await db.seed.run();
-      const authTest = await request(server)
-        .post("/api/users/login")
-        .send(testUser);
-      contextClassRef.session = authTest.header["set-cookie"];
-    } catch (err) {
-      console.log(`Error on test login! ${err}`);
-    }
+    await seedDB();
   });
   describe("when logged-in", () => {
     it(`POST should return ${postExpected}`, async () => {
@@ -249,7 +228,7 @@ describe.each`
       const response = await request(server)
         .post(`/api/${route}`)
         .send(dataToSend)
-        .set("Cookie", contextClassRef.session);
+        .set("Cookie", await contextClassRef2.session2);
       //console.log(response);
       expect(response.status).toEqual(201);
       expect(response.body).toEqual(postExpected);
@@ -260,7 +239,7 @@ describe.each`
       const response = await request(server)
         .put(`/api/${route}/1`)
         .send(dataToSend)
-        .set("Cookie", contextClassRef.session);
+        .set("Cookie", await contextClassRef2.session2);
       //console.log(`****~~~ ${JSON.stringify(response)}`);
       expect(response.status).toEqual(200);
       expect(response.body).toEqual(putExpected);
