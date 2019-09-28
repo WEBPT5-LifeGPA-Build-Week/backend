@@ -49,7 +49,6 @@ const cookieMaker = async () => {
 
 const contextClassRef2 = ContextHelper;
 contextClassRef2.session2 = cookieMaker();
-console.log("Cookie maker returned ",contextClassRef2.session2);
 
 
 describe("Register with POST /api/users/register", () => {
@@ -268,3 +267,5 @@ describe.each`
     });
   });
 });
+
+//test
