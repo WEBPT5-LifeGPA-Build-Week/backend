@@ -43,7 +43,6 @@ router.delete("/:id", restricted, validateUserId, async (req, res, next) => {
       message: "The user could not be deleted."
     });
   }
-  res.status(200).json(req.user);
 });
 
 // - `GET /api/users/:id/categories`: all categories (with weights) that a user has created
