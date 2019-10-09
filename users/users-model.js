@@ -20,11 +20,7 @@ function findBy(username) {
 
 function add(user) {
   try {
-    let result = db("Users")
-      .insert(user)
-      .then(([id]) => findById(id));
-    console.log("result", result);
-    return result;
+    return await db("Users").insert(user);
   } catch (err) {
     console.log(err);
   }
