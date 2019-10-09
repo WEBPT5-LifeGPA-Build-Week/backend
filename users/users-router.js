@@ -41,7 +41,7 @@ router.delete("/:id", restricted, validateUserId, async (req, res, next) => {
     next({
       status: 500,
       message: "The user could not be deleted.",
-      err
+      err: err
     });
   }
 });
