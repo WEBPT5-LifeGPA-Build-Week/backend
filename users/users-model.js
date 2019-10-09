@@ -34,10 +34,9 @@ function findById(id) {
     .first();
 }
 
-async function del(id) {
-  const user = await findById(id);
-  await db("users")
+function del(id) {
+  return db("users")
     .where("id", "=", id)
-    .del();
-  return user;
+    .del()
+    .returning("*");
 }
