@@ -40,7 +40,8 @@ router.delete("/:id", restricted, validateUserId, async (req, res, next) => {
   } catch (err) {
     next({
       status: 500,
-      message: "The user could not be deleted."
+      message: "The user could not be deleted.",
+      err
     });
   }
 });
