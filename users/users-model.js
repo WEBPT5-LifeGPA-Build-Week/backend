@@ -20,7 +20,9 @@ function findBy(username) {
 
 function add(user) {
   try {
-    return db("Users").insert(user);
+    return db("Users")
+      .insert(user)
+      .returning("*");
   } catch (err) {
     console.log(err);
   }
