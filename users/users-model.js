@@ -35,7 +35,7 @@ function findById(id) {
 }
 
 function del(id) {
-  return db("users")
+  return db("Users")
     .where("id", "=", id)
     .del()
     .returning("*");
