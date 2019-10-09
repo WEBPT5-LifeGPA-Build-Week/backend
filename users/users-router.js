@@ -34,15 +34,15 @@ router.get("/:id", restricted, validateUserId, (req, res, next) => {
 });
 
 router.delete("/:id", restricted, validateUserId, async (req, res, next) => {
-  // try {
-  const deleted = await Users.del(req.user.id);
-  res.status(200).json(deleted);
-  // } catch (err) {
-  //   next({
-  //     status: 500,
-  //     message: err
-  //   });
-  // }
+  try {
+    const deleted = await Users.del(req.user.id);
+    res.status(200).json(deleted);
+  } catch (err) {
+    next({
+      status: 500,
+      message: "The user could not be deleted."
+    });
+  }
 });
 
 // - `GET /api/users/:id/categories`: all categories (with weights) that a user has created
